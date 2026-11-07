@@ -8,12 +8,12 @@ network while a boundedly rational attacker probes it. The number of nodes
 changes every episode, which turns out to be where the interesting behaviour
 lives.
 
-This repository contains two studies and one ablation. Both studies produced
-negative results, and the ablation undercuts the most obvious reading of the
-headline numbers. All three are documented here rather than buried, because
-the negative results are the part worth reading.
+The original two studies and ablation below examine size generalisation,
+attacker misspecification, and the contribution of the equilibrium solver.
+The new containment study asks how those lessons change once an attacker
+must move through a network and a defender must preserve services.
 
-**What happened.** Learned agents matched the equilibrium solver on the
+**Original experiments.** Learned agents matched the equilibrium solver on the
 network sizes they trained on, then lost roughly four times as much value on
 sizes they had never seen. One measurement explained why and domain
 randomisation fixed it. A follow up study asked whether learning ever
@@ -25,6 +25,34 @@ beating reinforcement learning. It is that a good allocation-tracking
 heuristic beats both.
 
 ![Policy performance across regimes](figures/regime_comparison.png)
+
+---
+
+## New study: contain lateral movement while keeping services reachable
+
+A five-host, three-zone exercise turns a noisy alert into a ranked set of
+analyst actions. It models attack paths and required service flows separately,
+keeps true compromise state hidden in noisy regimes, and enforces a shared
+response budget. Try the demonstration with `python -m containment recommend`.
+
+In 300 paired simulations of the base graph with noisy alerts and service
+protection, two-step planning reduced mean modeled cost from **1.155 to
+0.911** versus one-step greedy and critical compromise from **30.7% to 21.0%**.
+The planner averaged 1.33 response tokens versus 0.69 for greedy under the
+same four-token cap. The two-step open-loop and adaptive variants matched
+in the reported runs. The [study notes](docs/containment.md) explain the
+ablation, the stress cases, and the assumptions behind the results.
+
+![Paired cost saved by two-step planning across simulated containment regimes](figures/containment_planning.svg)
+
+- [Ranked action example](results/containment_demo.json)
+- [Benchmark and reproduction commands](docs/containment.md#reproduce)
+- [Full results](results/containment_summary.csv) and [budget sensitivity](results/containment_budget_sweep.csv)
+
+The original Gymnasium studies below use the original flat environment.
+Its action indices are now bounds-checked, active slots can be queried
+through `action_masks()`, and the training wrapper seeds its node-count
+sampler. Existing padded checkpoints retain their action-space shape.
 
 ---
 

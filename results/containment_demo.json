@@ -1,0 +1,167 @@
+{
+  "scenario": "synthetic three-zone containment",
+  "initial_observation": {
+    "host": "workstation",
+    "alert": "positive"
+  },
+  "budget_tokens": 4,
+  "planning_ticks": 2,
+  "risk_window_ticks": 2,
+  "risk_assumption": "Apply the first action, then wait for the remainder of the risk window.",
+  "required_service_flows": [
+    [
+      "vpn",
+      "app"
+    ],
+    [
+      "app",
+      "backups"
+    ]
+  ],
+  "host_compromise_estimates": [
+    {
+      "host": "workstation",
+      "zone": "access",
+      "probability": 0.853933
+    },
+    {
+      "host": "vpn",
+      "zone": "access",
+      "probability": 0.058427
+    },
+    {
+      "host": "jump",
+      "zone": "operations",
+      "probability": 0.0
+    },
+    {
+      "host": "app",
+      "zone": "operations",
+      "probability": 0.0
+    },
+    {
+      "host": "backups",
+      "zone": "recovery",
+      "probability": 0.0
+    }
+  ],
+  "ranked_actions": [
+    {
+      "action": "Restrict workstation → jump",
+      "tokens": 1,
+      "tokens_remaining": 3,
+      "expected_horizon_cost": 0.124014,
+      "cost_reduction_vs_wait": 0.212341,
+      "critical_risk_without_followup": 0.018323,
+      "critical_risk_reduction_vs_wait_without_followup": 0.267793,
+      "modeled_paths_before": 3,
+      "modeled_paths_after": 0,
+      "service_flows_available": 2,
+      "explanation": "Removes 3 modeled paths from workstation to critical hosts. Keeps 2/2 required service flows reachable."
+    },
+    {
+      "action": "Isolate workstation",
+      "tokens": 2,
+      "tokens_remaining": 2,
+      "expected_horizon_cost": 0.142014,
+      "cost_reduction_vs_wait": 0.194341,
+      "critical_risk_without_followup": 0.018323,
+      "critical_risk_reduction_vs_wait_without_followup": 0.267793,
+      "modeled_paths_before": 3,
+      "modeled_paths_after": 0,
+      "service_flows_available": 2,
+      "explanation": "Removes 3 modeled paths from workstation to critical hosts. Keeps 2/2 required service flows reachable."
+    },
+    {
+      "action": "Wait",
+      "tokens": 0,
+      "tokens_remaining": 4,
+      "expected_horizon_cost": 0.336356,
+      "cost_reduction_vs_wait": 0.0,
+      "critical_risk_without_followup": 0.286116,
+      "critical_risk_reduction_vs_wait_without_followup": 0.0,
+      "modeled_paths_before": 3,
+      "modeled_paths_after": 3,
+      "service_flows_available": 2,
+      "explanation": "Preserve the response budget and observe the next alert. Keeps 2/2 required service flows reachable."
+    },
+    {
+      "action": "Restrict jump → backups",
+      "tokens": 1,
+      "tokens_remaining": 3,
+      "expected_horizon_cost": 0.339186,
+      "cost_reduction_vs_wait": -0.002831,
+      "critical_risk_without_followup": 0.286116,
+      "critical_risk_reduction_vs_wait_without_followup": 0.0,
+      "modeled_paths_before": 3,
+      "modeled_paths_after": 2,
+      "service_flows_available": 2,
+      "explanation": "Removes 1 modeled path from workstation to critical hosts. Keeps 2/2 required service flows reachable."
+    },
+    {
+      "action": "Inspect jump",
+      "tokens": 1,
+      "tokens_remaining": 3,
+      "expected_horizon_cost": 0.346491,
+      "cost_reduction_vs_wait": -0.010135,
+      "critical_risk_without_followup": 0.286116,
+      "critical_risk_reduction_vs_wait_without_followup": 0.0,
+      "modeled_paths_before": 3,
+      "modeled_paths_after": 3,
+      "service_flows_available": 2,
+      "explanation": "Gather a higher-quality observation of jump. Keeps 2/2 required service flows reachable."
+    },
+    {
+      "action": "Inspect workstation",
+      "tokens": 1,
+      "tokens_remaining": 3,
+      "expected_horizon_cost": 0.353386,
+      "cost_reduction_vs_wait": -0.01703,
+      "critical_risk_without_followup": 0.286116,
+      "critical_risk_reduction_vs_wait_without_followup": 0.0,
+      "modeled_paths_before": 3,
+      "modeled_paths_after": 3,
+      "service_flows_available": 2,
+      "explanation": "Gather a higher-quality observation of workstation. Keeps 2/2 required service flows reachable."
+    },
+    {
+      "action": "Inspect vpn",
+      "tokens": 1,
+      "tokens_remaining": 3,
+      "expected_horizon_cost": 0.354356,
+      "cost_reduction_vs_wait": -0.018,
+      "critical_risk_without_followup": 0.286116,
+      "critical_risk_reduction_vs_wait_without_followup": 0.0,
+      "modeled_paths_before": 3,
+      "modeled_paths_after": 3,
+      "service_flows_available": 2,
+      "explanation": "Gather a higher-quality observation of vpn. Keeps 2/2 required service flows reachable."
+    },
+    {
+      "action": "Inspect app",
+      "tokens": 1,
+      "tokens_remaining": 3,
+      "expected_horizon_cost": 0.354356,
+      "cost_reduction_vs_wait": -0.018,
+      "critical_risk_without_followup": 0.286116,
+      "critical_risk_reduction_vs_wait_without_followup": 0.0,
+      "modeled_paths_before": 3,
+      "modeled_paths_after": 3,
+      "service_flows_available": 2,
+      "explanation": "Gather a higher-quality observation of app. Keeps 2/2 required service flows reachable."
+    },
+    {
+      "action": "Inspect backups",
+      "tokens": 1,
+      "tokens_remaining": 3,
+      "expected_horizon_cost": 0.354356,
+      "cost_reduction_vs_wait": -0.018,
+      "critical_risk_without_followup": 0.286116,
+      "critical_risk_reduction_vs_wait_without_followup": 0.0,
+      "modeled_paths_before": 3,
+      "modeled_paths_after": 3,
+      "service_flows_available": 2,
+      "explanation": "Gather a higher-quality observation of backups. Keeps 2/2 required service flows reachable."
+    }
+  ]
+}

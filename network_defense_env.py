@@ -152,7 +152,13 @@ class NetworkDefenseEnv(gym.Env):
             "attacker_rationality": self.attacker_rationality,
         }
 
+    def action_masks(self) -> np.ndarray:
+        """Identify active slots for callers that support action masking."""
+        return self.active_mask.astype(bool)
+
     def step(self, action):
+        if not self.action_space.contains(action):
+            raise ValueError(f"Action outside the declared space: {action!r}")
         self.t += 1
         reward = 0.0
         action = int(action)
@@ -160,7 +166,7 @@ class NetworkDefenseEnv(gym.Env):
         # ---- Defender move -------------------------------------------
         remediated = False
         acted = False
-        if action < self.max_nodes and self.active_mask[action] == 1.0:
+        if self.active_mask[action] == 1.0:
             acted = True
             if self.compromised[action] == 1.0:
                 self.compromised[action] = 0.0
