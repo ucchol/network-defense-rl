@@ -58,7 +58,7 @@ def make_train_env(n_envs: int = 8, seed: int = 0, node_range=TRAIN_NODE_RANGE, 
                 seed=seed + rank,
                 **(env_kwargs or {}),
             )
-            return Monitor(_RangeWrapper(env, node_range))
+            return Monitor(_RangeWrapper(env, node_range, seed=seed + rank))
         return _init
 
     return DummyVecEnv([_factory(i) for i in range(n_envs)])
@@ -71,16 +71,18 @@ class _RangeWrapper(gym.Wrapper):
     a policy trained here can be evaluated on larger networks unchanged.
     """
 
-    def __init__(self, env: NetworkDefenseEnv, node_range):
+    def __init__(self, env: NetworkDefenseEnv, node_range, seed: int | None = None):
         super().__init__(env)
         self.node_range = node_range
-        self._rng = np.random.default_rng()
+        self._rng = np.random.default_rng(np.random.SeedSequence(seed).spawn(1)[0])
 
-    def reset(self, **kwargs):
-        n = int(self._rng.integers(self.node_range[0], self.node_range[1] + 1))
-        options = dict(kwargs.pop("options", None) or {})
-        options["n_nodes"] = n
-        return self.env.reset(options=options, **kwargs)
+    def reset(self, *, seed=None, options=None):
+        if seed is not None:
+            self._rng = np.random.default_rng(np.random.SeedSequence(seed).spawn(1)[0])
+        options = dict(options or {})
+        if options.get("n_nodes") is None:
+            options["n_nodes"] = int(self._rng.integers(self.node_range[0], self.node_range[1] + 1))
+        return self.env.reset(seed=seed, options=options)
 
 
 def train_ppo(
